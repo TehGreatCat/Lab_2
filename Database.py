@@ -12,9 +12,9 @@ class DataBase:
         self.port = port
         self.tables = {"terminal": ["terminal_id", "passengertraffic", "gates", "type", "runways", "cargo"],
                        "gates": ["gates_id", "throughput", "type", "terminal"],
-                       "flight": ["fl_id", "passengers", "plane", "timeofarrival", "gates", "type", "runway"],
-                       "runway": ["id", "length", "weightallowed", "terminal"],
-                       "cargodepot": ["id", "height", "volume", "numberofloaders", "terminal"]}
+                       "flight": ["flight_id", "passengers", "plane", "timeofarrival", "gates", "type", "runway"],
+                       "runway": ["runway_id", "length", "weightallowed", "terminal"],
+                       "cargodepot": ["cargo_id", "height", "volume", "numberofloaders", "terminal"]}
         try:
             self.connection = psycopg2.connect(database=self.database,
                                                user=self.user,
@@ -88,7 +88,8 @@ class DataBase:
 
     def update_entry(self, table_name, search_parameter, value):
         if table_name in self.tables:
-            query = "SELECT " + search_parameter + " FROM airport_modified." + table_name + " WHERE " + search_parameter + " = " + value
+            query = "SELECT " + search_parameter + " FROM airport_modified." + table_name + " WHERE " \
+                                                                                "" + search_parameter + " = " + value
             try:
                 temp = self.connection.cursor()
                 temp.execute(query)
@@ -97,7 +98,7 @@ class DataBase:
                     query = "UPDATE airport_modified." + table_name + " SET "
                     for elem in self.tables[table_name][1:]:
                         loc_elem = str(input("Enter " + elem + " for " + table_name + "\n"))
-                        if elem in ["type", "plane"]:
+                        if elem in ["type", "plane", "timeofarrival"]:
                             loc_elem = "'" + loc_elem + "'"
                         query += elem + " = " + loc_elem + ", "
                     query = query[:-2] + " WHERE " + search_parameter + " = " + value

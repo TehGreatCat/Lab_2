@@ -31,11 +31,11 @@ if __name__ == '__main__':
             if decision == "1":
                 db.add_entry(input("Table name:\n").lower())
             elif decision == "2":
-                db.update_entry(input("Table name:\n".lower()), input("Search parameter:\n"), input("Value:\n"))
+                db.update_entry(input("Table name:\n").lower(), input("Search parameter:\n").lower(), input("Value:\n"))
             elif decision == "3":
-                db.delete_entry(input("Table name:\n".lower()), input("Search parameter:\n"), input("Value:\n"))
+                db.delete_entry(input("Table name:\n").lower(), input("Search parameter:\n").lower(), input("Value:\n"))
             elif decision == "4":
-                db.show_table(input("Table name:\n".lower()))
+                db.show_table(input("Table name:\n").lower())
             elif decision == "5":
                 for table in db.tables:
                     print(table.capitalize())
@@ -48,7 +48,7 @@ if __name__ == '__main__':
                           "2: Gates info for each terminal\n"
                           "3: Gates throughput left\n"
                           "4: Flights Timetable\n"
-                          "5: \n"
+                          "5: Flights by time\n"
                           "6: Exit")
                     loc_decision = input()
                     if loc_decision == "1":
@@ -90,7 +90,7 @@ if __name__ == '__main__':
                             print("Query returned empty list")
                     elif loc_decision == "4":
                         runways = list(db.perform_query("""SELECT runway_id 
-                                                                              FROM airport_modified.runway"""))
+                                                           FROM airport_modified.runway"""))
                         query = """SELECT timeofarrival, """
                         if runways:
                             for elem in runways:
@@ -108,9 +108,11 @@ if __name__ == '__main__':
                         else:
                             print("Query returned empty list")
                     elif loc_decision == "5":
-                        temp = db.perform_query("""""")
+                        temp = db.perform_query("""SELECT timeofarrival, (COUNT(flight_id))
+                                                   FROM airport_modified.flight
+                                                   GROUP BY timeofarrival""")
                         if temp:
-                            x = PrettyTable(["", ""])
+                            x = PrettyTable(["Time of Arrival", "Number of Flights"])
                             for elem in temp:
                                 x.add_row(list(elem))
                             print(x)
